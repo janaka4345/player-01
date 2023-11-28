@@ -1,7 +1,7 @@
-import { Grid, OrbitControls, useTexture } from "@react-three/drei";
+import { OrbitControls, useTexture } from "@react-three/drei";
 import Lights from "./Lights";
 import { Physics, RigidBody } from "@react-three/rapier";
-import { RepeatWrapping, SphereGeometry } from "three";
+import { RepeatWrapping } from "three";
 
 export default function World() {
   const texture = useTexture("./green.jpg");
@@ -12,7 +12,8 @@ export default function World() {
     <>
       <OrbitControls makeDefault />
       <axesHelper args={[2]} />
-      <color attach="background" args={["#ffffff"]} />
+      <color attach="background" args={["#000000"]} />
+      <fog args={["#000000", 10, 50]} attach={"fog"} />
       <Physics debug>
         <Lights />
         <RigidBody
