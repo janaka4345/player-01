@@ -20,52 +20,52 @@ export default function World() {
 
   const [subscribeKeys, getKeys] = useKeyboardControls();
 
-  useEffect(() => {
-    const unsubcribeJump = subscribeKeys(
-      (state) => state.jump,
-      (pressed) => {
-        console.log("jump", pressed);
-      },
-    );
-    const unsubcribeForward = subscribeKeys(
-      (state) => state.forward,
-      (pressed) => {
-        console.log("forward", pressed);
-      },
-    );
-    const unsubcribeBack = subscribeKeys(
-      (state) => state.back,
-      (pressed) => {
-        console.log("back", pressed);
-      },
-    );
-    const unsubcribeLeft = subscribeKeys(
-      (state) => state.left,
-      (pressed) => {
-        console.log("left", pressed);
-      },
-    );
-    const unsubcribeRight = subscribeKeys(
-      (state) => state.right,
-      (pressed) => {
-        console.log("right", pressed);
-      },
-    );
-    const unsubcribeShift = subscribeKeys(
-      (state) => state.run,
-      (pressed) => {
-        console.log("shift", pressed);
-      },
-    );
-    return () => {
-      unsubcribeJump();
-      unsubcribeForward();
-      unsubcribeBack();
-      unsubcribeLeft();
-      unsubcribeRight();
-      unsubcribeShift();
-    };
-  }, []);
+  // useEffect(() => {
+  //   const unsubcribeJump = subscribeKeys(
+  //     (state) => state.jump,
+  //     (pressed) => {
+  //       console.log("jump", pressed);
+  //     },
+  //   );
+  //   const unsubcribeForward = subscribeKeys(
+  //     (state) => state.forward,
+  //     (pressed) => {
+  //       console.log("forward", pressed);
+  //     },
+  //   );
+  //   const unsubcribeBack = subscribeKeys(
+  //     (state) => state.back,
+  //     (pressed) => {
+  //       console.log("back", pressed);
+  //     },
+  //   );
+  //   const unsubcribeLeft = subscribeKeys(
+  //     (state) => state.left,
+  //     (pressed) => {
+  //       console.log("left", pressed);
+  //     },
+  //   );
+  //   const unsubcribeRight = subscribeKeys(
+  //     (state) => state.right,
+  //     (pressed) => {
+  //       console.log("right", pressed);
+  //     },
+  //   );
+  //   const unsubcribeShift = subscribeKeys(
+  //     (state) => state.run,
+  //     (pressed) => {
+  //       console.log("shift", pressed);
+  //     },
+  //   );
+  //   return () => {
+  //     unsubcribeJump();
+  //     unsubcribeForward();
+  //     unsubcribeBack();
+  //     unsubcribeLeft();
+  //     unsubcribeRight();
+  //     unsubcribeShift();
+  //   };
+  // }, []);
 
   useFrame((_, delta) => {
     /*
