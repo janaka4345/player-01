@@ -1,10 +1,11 @@
 import {
+  Box,
   OrbitControls,
   useKeyboardControls,
   useTexture,
 } from "@react-three/drei";
 import Lights from "./Lights";
-import { Physics, RigidBody } from "@react-three/rapier";
+import { CapsuleCollider, Physics, RigidBody } from "@react-three/rapier";
 import { RepeatWrapping } from "three";
 import { useEffect, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
@@ -114,9 +115,9 @@ export default function World() {
           restitution={0.2}
           friction={0.7}
         >
-          <mesh rotation={[-Math.PI * 0.5, 0, 0]}>
+          <mesh rotation={[-Math.PI * 0.5, 0, 0]} receiveShadow>
             <planeGeometry args={[100, 100, 10, 10]} />
-            <meshBasicMaterial map={texture} />
+            <meshStandardMaterial color={"green"} receiveShadow />
           </mesh>
         </RigidBody>
         {/* <RigidBody
@@ -132,13 +133,15 @@ export default function World() {
           </mesh>
         </RigidBody> */}
         <RigidBody
-          colliders="cuboid"
+          colliders={false}
           restitution={0.2}
           friction={0.7}
           position={[0, 5, 0]}
         >
-          <Player scale={2} />
+          <Player position={[0, -0.8, 0]} />
+          <CapsuleCollider args={[0.5, 0.4]} translation={[0, 5, 0]} />
         </RigidBody>
+        {/* <Box args={[2, 2, 2]} material-color="red" castShadow /> */}
       </Physics>
     </>
   );

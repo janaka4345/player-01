@@ -4,6 +4,9 @@ import { useFrame } from "@react-three/fiber";
 
 export function Player(props) {
   const group = useRef();
+  const currrentAnimation = useRef("Idle");
+  const shiftPressed = useRef(false);
+
   const { nodes, materials, animations } = useGLTF("./Soldier.glb");
   // console.log(animations);
   const { actions } = useAnimations(animations, group);
@@ -74,15 +77,15 @@ export function Player(props) {
     const unsubcribeShift = subscribeKeys(
       (state) => state.run,
       (pressed) => {
-        if (pressed && getKeys().forward) {
-          actions?.Idle?.fadeOut(0.5);
-          actions?.Walk?.fadeOut(0.5);
+        if (pressed) {
+          // actions?.Idle?.fadeOut(0.5);
+          // actions?.Walk?.fadeOut(0.5);
           // console.log("forward", pressed);
-          actions.Run.reset().fadeIn(0.5).play();
+          // actions.Run.reset().fadeIn(0.5).play();
         }
         if (!pressed && getKeys().forward) {
-          actions?.Run?.fadeOut(0.5);
-          actions.Walk.reset().fadeIn(0.5).play();
+          // actions?.Run?.fadeOut(0.5);
+          // actions.Walk.reset().fadeIn(0.5).play();
           // actions?.Walk?.fadeOut(0.5);
           // // console.log("forward", pressed);
           // actions.Run.reset().fadeIn(0.5).play();
@@ -121,6 +124,7 @@ export function Player(props) {
           userData={{ name: "Character" }}
         >
           <skinnedMesh
+            castShadow
             name="vanguard_Mesh"
             geometry={nodes.vanguard_Mesh.geometry}
             material={materials.VanguardBodyMat}
