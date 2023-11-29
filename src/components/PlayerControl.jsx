@@ -27,7 +27,7 @@ export function PlayerController() {
       (pressed) => {
         if (pressed) {
           // console.log("forward", pressed);
-          setAnimationState("Run");
+          setAnimationState("Walk");
         }
 
         if (!pressed) {
@@ -78,7 +78,7 @@ export function PlayerController() {
           // actions.Run.reset().fadeIn(0.5).play();
         }
         if (!pressed) {
-          setToggle();
+          // setToggle();
           // actions?.Run?.fadeOut(0.5);
           // actions.Idle.reset().fadeIn(0.5).play();
           // actions?.Walk?.fadeOut(0.5);

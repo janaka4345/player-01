@@ -10,13 +10,17 @@ const useStateEngine = create(
     // removeAllBears: () => set({ bears: 0 }),
     setState: (animation) => {
       set((state) => {
+        console.log(state.toggleRun);
         if (state.currentState === animation) {
           return {};
         }
         if (!state.toggleRun) {
           return { prevState: state.currentState, currentState: animation };
         }
-        return { prevState: state.currentState, currentState: "Run" };
+        if (state.toggleRun && state.currentState === "Walk") {
+          return { prevState: state.currentState, currentState: "Run" };
+        }
+        return {};
       });
     },
     setToggle: () => {
