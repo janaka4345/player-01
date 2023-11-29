@@ -27,7 +27,7 @@ export function PlayerController() {
       (pressed) => {
         if (pressed) {
           // console.log("forward", pressed);
-          setAnimationState("Walk");
+          setAnimationState("Run");
         }
 
         if (!pressed) {
