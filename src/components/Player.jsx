@@ -2,16 +2,40 @@ import React, { useEffect, useRef } from "react";
 import { useGLTF, useAnimations, useKeyboardControls } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { Quaternion, Vector3 } from "three";
+import useStateEngine from "../useStateEngine";
 
 export function Player(props) {
   const group = useRef();
-  const currrentAnimation = useRef("Idle");
-  const toggleRun = useRef(false);
+
+  const prevAnimation = useRef("Idle");
+  // const toggleRun = useRef(false);
 
   const { nodes, materials, animations } = useGLTF("./Soldier.glb");
   // console.log(animations);
   const { actions, mixer } = useAnimations(animations, group);
-  const [subscribeKeys, getKeys] = useKeyboardControls();
+  // const [subscribeKeys, getKeys] = useKeyboardControls();
+
+  useEffect(() => {
+    actions.Idle.reset().fadeIn(0.5).play();
+    const unsubsribePrevAnimation = useStateEngine.subscribe(
+      (state) => state.prevState,
+      (value) => {
+        prevAnimation.current = value;
+      },
+    );
+    const unsubsribeAnimation = useStateEngine.subscribe(
+      (state) => state.currentState,
+      (value) => {
+        // console.log(value, prevAnimation);
+        actions[prevAnimation.current].fadeOut(0.5);
+        actions[value].reset().fadeIn(0.5).play();
+      },
+    );
+    return () => {
+      unsubsribeAnimation();
+      unsubsribePrevAnimation();
+    };
+  }, []);
 
   // useEffect(() => {
   //   actions.Idle.reset().fadeIn(0.5).play();
