@@ -1,110 +1,128 @@
 import React, { useEffect, useRef } from "react";
 import { useGLTF, useAnimations, useKeyboardControls } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
+import { Quaternion, Vector3 } from "three";
 
 export function Player(props) {
   const group = useRef();
   const currrentAnimation = useRef("Idle");
-  const shiftPressed = useRef(false);
+  const toggleRun = useRef(false);
 
   const { nodes, materials, animations } = useGLTF("./Soldier.glb");
   // console.log(animations);
-  const { actions } = useAnimations(animations, group);
+  const { actions, mixer } = useAnimations(animations, group);
   const [subscribeKeys, getKeys] = useKeyboardControls();
 
-  useEffect(() => {
-    actions.Idle.reset().fadeIn(0.5).play();
-    const unsubcribeJump = subscribeKeys(
-      (state) => state.jump,
-      (pressed) => {
-        if (pressed) {
-          // console.log();
-        }
-        if (!pressed) {
-          // console.log("jump", pressed);
-        }
-      },
-    );
-    const unsubcribeForward = subscribeKeys(
-      (state) => state.forward,
-      (pressed) => {
-        if (pressed) {
-          actions.Idle.fadeOut(0.5);
-          // console.log("forward", pressed);
-          actions.Walk.reset().fadeIn(0.5).play();
-        }
+  // useEffect(() => {
+  //   actions.Idle.reset().fadeIn(0.5).play();
+  //   const unsubcribeJump = subscribeKeys(
+  //     (state) => state.jump,
+  //     (pressed) => {
+  //       if (pressed) {
+  //         // console.log();
+  //       }
+  //       if (!pressed) {
+  //         // console.log("jump", pressed);
+  //       }
+  //     },
+  //   );
+  //   const unsubcribeForward = subscribeKeys(
+  //     (state) => state.forward,
+  //     (pressed) => {
+  //       if (pressed) {
+  //         actions.Idle.fadeOut(0.5);
+  //         // console.log("forward", pressed);
+  //         actions.Walk.reset().fadeIn(0.5).play();
+  //         currrentAnimation.current = "Walk";
+  //       }
 
-        if (!pressed) {
-          // console.log("forward", pressed);
-          actions.Run.fadeOut(0.5);
-          actions.Walk.fadeOut(0.5);
-          actions.Idle.reset().fadeIn(0.5).play();
-        }
-      },
-    );
-    const unsubcribeBack = subscribeKeys(
-      (state) => state.back,
-      (pressed) => {
-        if (pressed) {
-          actions.Idle.fadeOut(0.5);
-          console.log("back", pressed);
-          actions.Walk.reset().fadeIn(0.5).play();
-        }
-        if (!pressed) {
-          actions.Walk.fadeOut(0.5);
-          actions.Idle.reset().fadeIn(0.5).play();
-        }
-      },
-    );
-    const unsubcribeLeft = subscribeKeys(
-      (state) => state.left,
-      (pressed) => {
-        if (pressed) {
-          // group.current.rotation.set([0, Math.Pi * 0.5, 0]);
-          // actions.Idle.reset().fadeIn(0.5).play();
-        }
-      },
-    );
-    const unsubcribeRight = subscribeKeys(
-      (state) => state.right,
-      (pressed) => {
-        if (pressed) {
-          console.log("right", pressed);
-          // actions.Run.reset().fadeIn(0.5).play();
-        }
-      },
-    );
-    const unsubcribeShift = subscribeKeys(
-      (state) => state.run,
-      (pressed) => {
-        if (pressed) {
-          // actions?.Idle?.fadeOut(0.5);
-          // actions?.Walk?.fadeOut(0.5);
-          // console.log("forward", pressed);
-          // actions.Run.reset().fadeIn(0.5).play();
-        }
-        if (!pressed && getKeys().forward) {
-          // actions?.Run?.fadeOut(0.5);
-          // actions.Walk.reset().fadeIn(0.5).play();
-          // actions?.Walk?.fadeOut(0.5);
-          // // console.log("forward", pressed);
-          // actions.Run.reset().fadeIn(0.5).play();
-        }
-      },
-    );
-    return () => {
-      unsubcribeJump();
-      unsubcribeForward();
-      unsubcribeBack();
-      unsubcribeLeft();
-      unsubcribeRight();
-      // unsubcribeShift();
-    };
-  }, []);
+  //       if (!pressed) {
+  //         // console.log("forward", pressed);
+  //         actions.Run.fadeOut(0.5);
+  //         actions.Walk.fadeOut(0.5);
+  //         actions.Idle.reset().fadeIn(0.5).play();
+  //         currrentAnimation.current = "Idle";
+  //       }
+  //     },
+  //   );
+  //   const unsubcribeBack = subscribeKeys(
+  //     (state) => state.back,
+  //     (pressed) => {
+  //       if (pressed) {
+  //         actions.Idle.fadeOut(0.5);
+  //         actions.Walk.reset().fadeIn(0.5).play();
+  //         currrentAnimation.current = "Walk";
+  //       }
+  //       if (!pressed) {
+  //         actions.Walk.fadeOut(0.5);
+  //         actions.Idle.reset().fadeIn(0.5).play();
+  //         currrentAnimation.current = "Idle";
+  //       }
+  //     },
+  //   );
+  //   const unsubcribeLeft = subscribeKeys(
+  //     (state) => state.left,
+  //     (pressed) => {
+  //       if (pressed) {
+  //         // group.current.rotation.set([0, Math.Pi * 0.5, 0]);
+  //         // actions.Idle.reset().fadeIn(0.5).play();
+  //       }
+  //     },
+  //   );
+  //   const unsubcribeRight = subscribeKeys(
+  //     (state) => state.right,
+  //     (pressed) => {
+  //       if (pressed) {
+  //         console.log(actions);
+  //         // actions.Run.reset().fadeIn(0.5).play();
+  //       }
+  //     },
+  //   );
+  //   const unsubcribeShift = subscribeKeys(
+  //     (state) => state.run,
+  //     (pressed) => {
+  //       if (pressed) {
+  //         toggleRun.current = !toggleRun.current;
+  //         // mixer.update(0.16);
 
-  useFrame((_, delta) => {
-    // console.log(group.current);
-  });
+  //         // actions.Idle.fadeOut(0.5);
+  //         // actions.Run.reset().fadeIn(0.5).play();
+
+  //         // actions?.Idle?.fadeOut(0.5);
+  //         // actions?.Walk?.fadeOut(0.5);
+  //         // console.log("forward", pressed);
+  //         // actions.Run.reset().fadeIn(0.5).play();
+  //       }
+  //       if (!pressed) {
+  //         // actions?.Run?.fadeOut(0.5);
+  //         // actions.Idle.reset().fadeIn(0.5).play();
+  //         // actions?.Walk?.fadeOut(0.5);
+  //         // console.log(toggleRun, mixer);
+  //         // actions.Run.reset().fadeIn(0.5).play();
+  //       }
+  //     },
+  //   );
+  //   return () => {
+  //     unsubcribeJump();
+  //     unsubcribeForward();
+  //     unsubcribeBack();
+  //     unsubcribeLeft();
+  //     unsubcribeRight();
+  //     unsubcribeShift();
+  //   };
+  // }, []);
+
+  // const walkDirection = new Vector3();
+  // const rotateAngle = new Vector3(0, 1, 0);
+  // const rotateQuortanion = new Quaternion();
+  // const cameraTarget = new Vector3();
+
+  // const runVel = 5;
+  // const walkVel = 2;
+  // useFrame((_, delta) => {
+  //   let changeRotation = false;
+  //   // console.log(group.current);
+  // });
 
   return (
     <group ref={group} {...props} dispose={null}>
