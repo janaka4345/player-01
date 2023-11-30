@@ -5,12 +5,9 @@ const useStateEngine = create(
   subscribeWithSelector((set) => ({
     currentState: "Idle",
     prevState: "Idle",
-    toggleRun: false,
-    // increasePopulation: () => set((state) => ({ bears: state.bears + 1 })),
-    // removeAllBears: () => set({ bears: 0 }),
+
     setState: (animation) => {
       set((state) => {
-        console.log(state.toggleRun);
         if (state.currentState === animation) {
           return {};
         }
@@ -21,11 +18,6 @@ const useStateEngine = create(
           return { prevState: state.currentState, currentState: "Run" };
         }
         return {};
-      });
-    },
-    setToggle: () => {
-      set((state) => {
-        return { toggleRun: !state.toggleRun };
       });
     },
   })),

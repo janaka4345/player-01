@@ -7,7 +7,6 @@ import { Player } from "./Player";
 export function PlayerController() {
   const [subscribeKeys, getKeys] = useKeyboardControls();
   const setAnimationState = useStateEngine((state) => state.setState);
-  const setToggle = useStateEngine((state) => state.setToggle);
   useEffect(() => {
     const unsubcribeJump = subscribeKeys(
       (state) => state.jump,
@@ -26,12 +25,10 @@ export function PlayerController() {
       (state) => state.forward,
       (pressed) => {
         if (pressed) {
-          // console.log("forward", pressed);
           setAnimationState("Walk");
         }
 
         if (!pressed) {
-          // console.log("forward", pressed);
           setAnimationState("Idle");
         }
       },
@@ -58,32 +55,23 @@ export function PlayerController() {
       (state) => state.right,
       (pressed) => {
         if (pressed) {
-          // console.log(actions);
-          // actions.Run.reset().fadeIn(0.5).play();
         }
       },
     );
     const unsubcribeShift = subscribeKeys(
       (state) => state.run,
       (pressed) => {
-        if (pressed) {
-          setToggle();
-          // toggleRun.current = !toggleRun.current;
-          // mixer.update(0.16);
-          // actions.Idle.fadeOut(0.5);
-          // actions.Run.reset().fadeIn(0.5).play();
-          // actions?.Idle?.fadeOut(0.5);
-          // actions?.Walk?.fadeOut(0.5);
-          // console.log("forward", pressed);
-          // actions.Run.reset().fadeIn(0.5).play();
+        console.log(getKeys().forward);
+        if (pressed && getKeys().forward) {
+          setAnimationState("Run");
+          return;
+        }
+        if (!pressed && getKeys().forward) {
+          setAnimationState("Walk");
+          return;
         }
         if (!pressed) {
-          // setToggle();
-          // actions?.Run?.fadeOut(0.5);
-          // actions.Idle.reset().fadeIn(0.5).play();
-          // actions?.Walk?.fadeOut(0.5);
-          // console.log(toggleRun, mixer);
-          // actions.Run.reset().fadeIn(0.5).play();
+          setAnimationState("Idle");
         }
       },
     );

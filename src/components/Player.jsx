@@ -26,7 +26,7 @@ export function Player(props) {
     const unsubsribeAnimation = useStateEngine.subscribe(
       (state) => state.currentState,
       (value) => {
-        // console.log(value, prevAnimation);
+        // console.log(value);
         actions[prevAnimation.current].fadeOut(0.5);
         actions[value].reset().fadeIn(0.5).play();
       },
