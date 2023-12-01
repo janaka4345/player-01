@@ -3,8 +3,10 @@ import { CapsuleCollider, RigidBody } from "@react-three/rapier";
 import { useEffect } from "react";
 import useStateEngine from "../useStateEngine";
 import { Player } from "./Player";
+import { Player02 } from "./Player02";
 
 export function PlayerController() {
+  console.log("hi");
   const [subscribeKeys, getKeys] = useKeyboardControls();
   const setAnimationState = useStateEngine((state) => state.setState);
   useEffect(() => {
@@ -13,7 +15,7 @@ export function PlayerController() {
       (pressed) => {
         if (pressed) {
           // console.log();
-          setAnimationState("TBody");
+          setAnimationState("TPose");
         }
         if (!pressed) {
           // console.log("jump", pressed);
@@ -61,7 +63,6 @@ export function PlayerController() {
     const unsubcribeShift = subscribeKeys(
       (state) => state.run,
       (pressed) => {
-        console.log(getKeys().forward);
         if (pressed && getKeys().forward) {
           setAnimationState("Run");
           return;
@@ -92,6 +93,7 @@ export function PlayerController() {
       position={[0, 5, 0]}
     >
       <Player position={[0, -0.8, 0]} />
+      {/* <Player02 position={[0, -0.8, 0]} /> */}
       <CapsuleCollider args={[0.5, 0.4]} translation={[0, 5, 0]} />
     </RigidBody>
   );

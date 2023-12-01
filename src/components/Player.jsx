@@ -16,17 +16,19 @@ export function Player(props) {
   // const [subscribeKeys, getKeys] = useKeyboardControls();
 
   useEffect(() => {
+    // console.log(actions);
     actions.Idle.reset().fadeIn(0.5).play();
     const unsubsribePrevAnimation = useStateEngine.subscribe(
       (state) => state.prevState,
       (value) => {
+        // console.log("prev:", value);
         prevAnimation.current = value;
       },
     );
     const unsubsribeAnimation = useStateEngine.subscribe(
       (state) => state.currentState,
       (value) => {
-        // console.log(value);
+        // console.log("cur:", value);
         actions[prevAnimation.current].fadeOut(0.5);
         actions[value].reset().fadeIn(0.5).play();
       },
