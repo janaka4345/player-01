@@ -15,6 +15,7 @@ export function PlayerController() {
   let changeRotation = false;
 
   const playerBody = useRef();
+  const characterBody = useRef();
   const currAnimation = useRef();
 
   const [subscribeKeys, getKeys] = useKeyboardControls();
@@ -61,8 +62,10 @@ export function PlayerController() {
       (state) => state.back,
       (pressed) => {
         if (pressed) {
+          setAnimationState("Walk");
         }
         if (!pressed) {
+          setAnimationState("Idle");
         }
       },
     );
@@ -70,8 +73,10 @@ export function PlayerController() {
       (state) => state.left,
       (pressed) => {
         if (pressed) {
-          // group.current.rotation.set([0, Math.Pi * 0.5, 0]);
-          // actions.Idle.reset().fadeIn(0.5).play();
+          setAnimationState("Walk");
+        }
+        if (!pressed) {
+          setAnimationState("Idle");
         }
       },
     );
@@ -79,17 +84,21 @@ export function PlayerController() {
       (state) => state.right,
       (pressed) => {
         if (pressed) {
+          setAnimationState("Walk");
+        }
+        if (!pressed) {
+          setAnimationState("Idle");
         }
       },
     );
     const unsubcribeShift = subscribeKeys(
       (state) => state.run,
       (pressed) => {
-        if (pressed && getKeys().forward) {
+        if (pressed && currAnimation.current === "Walk") {
           setAnimationState("Run");
           return;
         }
-        if (!pressed && getKeys().forward) {
+        if (!pressed && currAnimation.current === "Walk") {
           setAnimationState("Walk");
           return;
         }
@@ -112,34 +121,40 @@ export function PlayerController() {
   useFrame((state, delta) => {
     const linVel = playerBody.current.linvel();
     const impulse = { x: 0, y: 0, z: 0 };
+    let changeRotation = false;
 
     // if (jumpPressed && isOnFloor.current) {
     //   impulse.y += JUMP_FORCE;
     //   changeRotation = true;
     //   isOnFloor.current = false;
     // }
-    if (currAnimation.current === "Walk" && linVel.z > -MAX_VEL) {
+    if (getKeys().forward && linVel.z > -MAX_VEL) {
       impulse.z -= MOVEMENT_SPEED;
-      // changeRotation = true;
+      changeRotation = true;
     }
-    // if (backPressed && linVel.z < MAX_VEL) {
-    //   impulse.z += MOVEMENT_SPEED;
-    //   // changeRotation = true;
-    // }
-    // if (leftPressed && linVel.x > -MAX_VEL) {
-    //   impulse.x -= MOVEMENT_SPEED;
-    //   // changeRotation = true;
-    // }
-    // if (rightPressed && linVel.x < MAX_VEL) {
-    //   impulse.x += MOVEMENT_SPEED;
-    //   // changeRotation = true;
-    // }
+    if (getKeys().forward && getKeys().run && linVel.z > -MAX_VEL * 3) {
+      impulse.z -= MOVEMENT_SPEED;
+      changeRotation = true;
+    }
+    if (getKeys().back && linVel.z < MAX_VEL) {
+      impulse.z += MOVEMENT_SPEED;
+      changeRotation = true;
+    }
+    if (getKeys().left && linVel.x > -MAX_VEL) {
+      impulse.x -= MOVEMENT_SPEED;
+      changeRotation = true;
+    }
+    if (getKeys().right && linVel.x < MAX_VEL) {
+      impulse.x += MOVEMENT_SPEED;
+      changeRotation = true;
+    }
 
     playerBody.current.applyImpulse(impulse, true);
-    // if (changeRotation) {
-    //   const angle = Math.atan2(linVel.x, linVel.z);
-    //   characterRef.current.rotation.y = angle;
-    // }
+    if (changeRotation) {
+      // console.log(linVel);
+      const angle = Math.atan2(linVel.x, linVel.z);
+      characterBody.current.rotation.y = angle;
+    }
   });
   return (
     <RigidBody
@@ -150,7 +165,9 @@ export function PlayerController() {
       position={[0, 5, 0]}
       enabledRotations={[false, false, false]}
     >
-      <Player position={[0, -0.8, 0]} />
+      <group ref={characterBody}>
+        <Player position={[0, -0.8, 0]} />
+      </group>
       {/* <Player02 position={[0, -0.8, 0]} /> */}
       <CapsuleCollider args={[0.5, 0.4]} translation={[0, 5, 0]} />
     </RigidBody>

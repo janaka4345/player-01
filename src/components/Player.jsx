@@ -163,7 +163,7 @@ export function Player(props) {
       >
         <group
           name="Character"
-          rotation={[-Math.PI / 2, 0, 0]}
+          rotation={[-Math.PI / 2, 0, -Math.PI]}
           scale={0.01}
           userData={{ name: "Character" }}
         >
