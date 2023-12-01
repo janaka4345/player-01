@@ -5,6 +5,17 @@ const useStateEngine = create(
   subscribeWithSelector((set) => ({
     currentState: "Idle",
     prevState: "Idle",
+    impulse: { x: 0, y: 0, z: 0 },
+    // setLinVel: (vel) => {
+    //   set((state) => {
+    //     return { linVel: vel };
+    //   });
+    // },
+    setImpulse: (imp) => {
+      set((state) => {
+        return { impulse: imp };
+      });
+    },
 
     setState: (animation) => {
       set((state) => {
