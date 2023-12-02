@@ -131,23 +131,23 @@ export function PlayerController() {
     //   isOnFloor.current = false;
     // }
     if (getKeys().forward && linVel.z > -MAX_VEL) {
-      impulse.z -= MOVEMENT_SPEED * delta;
+      impulse.z -= MOVEMENT_SPEED * delta * 10;
       changeRotation = true;
     }
     if (getKeys().forward && getKeys().run && linVel.z > -MAX_VEL * 3) {
-      impulse.z -= MOVEMENT_SPEED * delta;
+      impulse.z -= MOVEMENT_SPEED * delta * 10;
       changeRotation = true;
     }
     if (getKeys().back && linVel.z < MAX_VEL) {
-      impulse.z += MOVEMENT_SPEED * delta;
+      impulse.z += MOVEMENT_SPEED * delta * 10;
       changeRotation = true;
     }
     if (getKeys().left && linVel.x > -MAX_VEL) {
-      impulse.x -= MOVEMENT_SPEED * delta;
+      impulse.x -= MOVEMENT_SPEED * delta * 10;
       changeRotation = true;
     }
     if (getKeys().right && linVel.x < MAX_VEL) {
-      impulse.x += MOVEMENT_SPEED * delta;
+      impulse.x += MOVEMENT_SPEED * delta * 10;
       changeRotation = true;
     }
 
@@ -157,10 +157,7 @@ export function PlayerController() {
     if (changeRotation) {
       console.log(changeRotation);
       const angle = Math.atan2(linVel.x, linVel.z);
-      playerBody.current.applyTorqueImpulse(
-        { x: 0, y: 0.01 * delta, z: 0 },
-        true,
-      );
+      playerBody.current.applyTorqueImpulse({ x: 0, y: 0.01, z: 0 }, true);
     }
     // if (!changeRotation) {
     // console.log(changeRotation);
