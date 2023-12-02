@@ -157,7 +157,11 @@ export function PlayerController() {
     if (changeRotation) {
       console.log(changeRotation);
       const angle = Math.atan2(linVel.x, linVel.z);
-      playerBody.current.applyTorqueImpulse({ x: 0, y: 0.01, z: 0 }, true);
+      /*
+       *add qurtanions for rotation
+       */
+      // const eular
+      ///      playerBody.current.setRotation({ w: 1.0, x: 0.0, y: 1, z: 0.0 });
     }
     // if (!changeRotation) {
     // console.log(changeRotation);
