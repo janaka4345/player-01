@@ -10,7 +10,7 @@ export function PlayerController() {
   console.log("hi");
 
   const JUMP_FORCE = 0.5;
-  const MOVEMENT_SPEED = 0.1;
+  const MOVEMENT_SPEED = 4;
   const MAX_VEL = 3;
   let changeRotation = false;
 
@@ -73,6 +73,7 @@ export function PlayerController() {
       (state) => state.left,
       (pressed) => {
         if (pressed) {
+          // playerBody.current.applyTorqueImpulse({ x: 0, y: 0.1, z: 0 }, true);
           setAnimationState("Walk");
         }
         if (!pressed) {
@@ -84,6 +85,7 @@ export function PlayerController() {
       (state) => state.right,
       (pressed) => {
         if (pressed) {
+          // playerBody.current.applyTorqueImpulse({ x: 0, y: -0.1, z: 0 }, true);
           setAnimationState("Walk");
         }
         if (!pressed) {
@@ -119,8 +121,8 @@ export function PlayerController() {
   }, []);
 
   useFrame((state, delta) => {
-    const linVel = playerBody.current.linvel();
     const impulse = { x: 0, y: 0, z: 0 };
+    const linVel = playerBody.current.linvel();
     let changeRotation = false;
 
     // if (jumpPressed && isOnFloor.current) {
@@ -129,41 +131,53 @@ export function PlayerController() {
     //   isOnFloor.current = false;
     // }
     if (getKeys().forward && linVel.z > -MAX_VEL) {
-      impulse.z -= MOVEMENT_SPEED;
+      impulse.z -= MOVEMENT_SPEED * delta;
       changeRotation = true;
     }
     if (getKeys().forward && getKeys().run && linVel.z > -MAX_VEL * 3) {
-      impulse.z -= MOVEMENT_SPEED;
+      impulse.z -= MOVEMENT_SPEED * delta;
       changeRotation = true;
     }
     if (getKeys().back && linVel.z < MAX_VEL) {
-      impulse.z += MOVEMENT_SPEED;
+      impulse.z += MOVEMENT_SPEED * delta;
       changeRotation = true;
     }
     if (getKeys().left && linVel.x > -MAX_VEL) {
-      impulse.x -= MOVEMENT_SPEED;
+      impulse.x -= MOVEMENT_SPEED * delta;
       changeRotation = true;
     }
     if (getKeys().right && linVel.x < MAX_VEL) {
-      impulse.x += MOVEMENT_SPEED;
+      impulse.x += MOVEMENT_SPEED * delta;
       changeRotation = true;
     }
 
+    // console.log(impulse);
+
     playerBody.current.applyImpulse(impulse, true);
     if (changeRotation) {
-      // console.log(linVel);
+      console.log(changeRotation);
       const angle = Math.atan2(linVel.x, linVel.z);
-      characterBody.current.rotation.y = angle;
+      playerBody.current.applyTorqueImpulse(
+        { x: 0, y: 0.01 * delta, z: 0 },
+        true,
+      );
     }
+    // if (!changeRotation) {
+    // console.log(changeRotation);
+    // const angle = Math.atan2(linVel.x, linVel.z);
+    // playerBody.current.resetTorqueImpulse();
+    // }
   });
   return (
     <RigidBody
       ref={playerBody}
       colliders={false}
       restitution={0.2}
-      friction={0.7}
+      friction={2}
       position={[0, 5, 0]}
-      enabledRotations={[false, false, false]}
+      enabledRotations={[false, true, false]}
+      linearDamping={0.5}
+      angularDamping={0.5}
     >
       <group ref={characterBody}>
         <Player position={[0, -0.8, 0]} />
