@@ -6,8 +6,9 @@ import { Player } from "./Player";
 import { Player02 } from "./Player02";
 import { useFrame } from "@react-three/fiber";
 import { Player03 } from "./Player03";
+import { Euler, Quaternion, Vector3 } from "three";
 
-export function PlayerController() {
+export function PlayerController2() {
   console.log("hi");
 
   const JUMP_FORCE = 0.5;
@@ -54,7 +55,10 @@ export function PlayerController() {
           setAnimationState("Walk");
         }
 
-        if (!pressed) {
+        if (
+          !pressed &&
+          !(getKeys().back || getKeys().left || getKeys().right)
+        ) {
           setAnimationState("Idle");
         }
       },
@@ -65,7 +69,10 @@ export function PlayerController() {
         if (pressed) {
           setAnimationState("Walk");
         }
-        if (!pressed) {
+        if (
+          !pressed &&
+          !(getKeys().forward || getKeys().left || getKeys().right)
+        ) {
           setAnimationState("Idle");
         }
       },
@@ -77,7 +84,10 @@ export function PlayerController() {
           // playerBody.current.applyTorqueImpulse({ x: 0, y: 0.1, z: 0 }, true);
           setAnimationState("Walk");
         }
-        if (!pressed) {
+        if (
+          !pressed &&
+          !(getKeys().back || getKeys().forward || getKeys().right)
+        ) {
           setAnimationState("Idle");
         }
       },
@@ -89,7 +99,10 @@ export function PlayerController() {
           // playerBody.current.applyTorqueImpulse({ x: 0, y: -0.1, z: 0 }, true);
           setAnimationState("Walk");
         }
-        if (!pressed) {
+        if (
+          !pressed &&
+          !(getKeys().back || getKeys().left || getKeys().forward)
+        ) {
           setAnimationState("Idle");
         }
       },
@@ -101,7 +114,7 @@ export function PlayerController() {
           setAnimationState("Run");
           return;
         }
-        if (!pressed && currAnimation.current === "Walk") {
+        if (!pressed && currAnimation.current === "Run") {
           setAnimationState("Walk");
           return;
         }
@@ -125,6 +138,7 @@ export function PlayerController() {
     const impulse = { x: 0, y: 0, z: 0 };
     const linVel = playerBody.current.linvel();
     let changeRotation = false;
+    // console.log(currAnimation.current);
 
     // if (jumpPressed && isOnFloor.current) {
     //   impulse.y += JUMP_FORCE;
@@ -158,24 +172,27 @@ export function PlayerController() {
     if (changeRotation) {
       // console.log(changeRotation);
       const angle = Math.atan2(linVel.x, linVel.z);
+      const rotation = new Quaternion();
+      rotation.setFromEuler(new Euler(0, angle, 0));
+      // console.log(rotation);
       /*
        *add qurtanions for rotation
        */
       // const eular
       ///      playerBody.current.setRotation({ w: 1.0, x: 0.0, y: 1, z: 0.0 });
+      // }
+      // if (!changeRotation) {
+      // console.log(changeRotation);
+      // const angle = Math.atan2(linVel.x, linVel.z);
+      playerBody.current.setRotation(rotation);
     }
-    // if (!changeRotation) {
-    // console.log(changeRotation);
-    // const angle = Math.atan2(linVel.x, linVel.z);
-    // playerBody.current.resetTorqueImpulse();
-    // }
   });
   return (
     <RigidBody
       ref={playerBody}
       colliders={false}
       restitution={0.2}
-      friction={2}
+      friction={0.7}
       position={[0, 5, 0]}
       enabledRotations={[false, true, false]}
       linearDamping={0.5}

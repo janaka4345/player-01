@@ -10,6 +10,7 @@ import { useEffect, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import { PlayerController } from "./PlayerControl";
 import Plane from "./Plane";
+import { PlayerController2 } from "./PlayerController2";
 
 export default function World() {
   const playerRef = useRef();
@@ -58,7 +59,8 @@ export default function World() {
       <Physics debug>
         <Lights />
         <Plane />
-        <PlayerController />
+        {/* <PlayerController /> */}
+        <PlayerController2 />
 
         {/* <Box args={[2, 2, 2]} material-color="red" castShadow /> */}
       </Physics>
