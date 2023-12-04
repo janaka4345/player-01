@@ -1,4 +1,4 @@
-import { useKeyboardControls } from "@react-three/drei";
+import { CameraControls, useKeyboardControls } from "@react-three/drei";
 import { CapsuleCollider, RigidBody } from "@react-three/rapier";
 import { useEffect, useRef } from "react";
 import useStateEngine from "../useStateEngine";
@@ -7,17 +7,55 @@ import { Player02 } from "./Player02";
 import { useFrame } from "@react-three/fiber";
 import { Player03 } from "./Player03";
 import { Euler, Quaternion, Vector3 } from "three";
+import { useControls } from "leva";
 
 export function PlayerController2() {
   console.log("hi");
-
+  const props = useControls("camera", {
+    x: {
+      value: 0,
+      min: -10,
+      max: 10,
+      step: 1,
+    },
+    y: {
+      value: 0,
+      min: -10,
+      max: 10,
+      step: 1,
+    },
+    z: {
+      value: 0,
+      min: -10,
+      max: 10,
+      step: 1,
+    },
+    tx: {
+      value: 0,
+      min: -10,
+      max: 10,
+      step: 1,
+    },
+    ty: {
+      value: 0,
+      min: -10,
+      max: 10,
+      step: 1,
+    },
+    tz: {
+      value: 0,
+      min: -10,
+      max: 10,
+      step: 1,
+    },
+  });
   const JUMP_FORCE = 0.5;
   const MOVEMENT_SPEED = 4;
   const MAX_VEL = 3;
   let changeRotation = false;
 
   const playerBody = useRef();
-  const characterBody = useRef();
+  const cameraRef = useRef();
   const currAnimation = useRef();
 
   const [subscribeKeys, getKeys] = useKeyboardControls();
@@ -137,8 +175,9 @@ export function PlayerController2() {
   useFrame((state, delta) => {
     const impulse = { x: 0, y: 0, z: 0 };
     const linVel = playerBody.current.linvel();
+    const playerPosition = playerBody.current.translation();
     let changeRotation = false;
-    // console.log(currAnimation.current);
+    // console.log(playerPosition);
 
     // if (jumpPressed && isOnFloor.current) {
     //   impulse.y += JUMP_FORCE;
@@ -186,24 +225,34 @@ export function PlayerController2() {
       // const angle = Math.atan2(linVel.x, linVel.z);
       playerBody.current.setRotation(rotation);
     }
+    cameraRef.current.setLookAt(
+      playerPosition.x + 0,
+      playerPosition.y + 2,
+      playerPosition.z - 4,
+      playerPosition.x - 1,
+      playerPosition.y + 1,
+      playerPosition.z + -1,
+      true,
+    );
   });
   return (
-    <RigidBody
-      ref={playerBody}
-      colliders={false}
-      restitution={0.2}
-      friction={0.7}
-      position={[0, 5, 0]}
-      enabledRotations={[false, true, false]}
-      linearDamping={0.5}
-      angularDamping={0.5}
-    >
-      <group ref={characterBody}>
-        {/* <Player position={[0, -0.8, 0]} /> */}
-      </group>
-      {/* <Player02 position={[0, -0.8, 0]} /> */}
-      <Player03 position={[0, -0.8, 0]} />
-      <CapsuleCollider args={[0.5, 0.4]} translation={[0, 5, 0]} />
-    </RigidBody>
+    <>
+      <CameraControls ref={cameraRef} />
+      <RigidBody
+        ref={playerBody}
+        colliders={false}
+        restitution={0.2}
+        friction={0.7}
+        position={[0, 5, 0]}
+        enabledRotations={[false, true, false]}
+        linearDamping={0.5}
+        angularDamping={0.5}
+      >
+        {/* <group><Player position={[0, -0.8, 0]} /></group> */}
+        {/* <Player02 position={[0, -0.8, 0]} /> */}
+        <Player03 position={[0, -0.8, 0]} />
+        <CapsuleCollider args={[0.5, 0.4]} translation={[0, 5, 0]} />
+      </RigidBody>
+    </>
   );
 }
