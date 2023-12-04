@@ -7,48 +7,48 @@ import { Player02 } from "./Player02";
 import { useFrame } from "@react-three/fiber";
 import { Player03 } from "./Player03";
 import { Euler, Quaternion, Vector3 } from "three";
-import { useControls } from "leva";
+// import { useControls } from "leva";
 
 export function PlayerController2() {
   console.log("hi");
-  const props = useControls("camera", {
-    x: {
-      value: 0,
-      min: -10,
-      max: 10,
-      step: 1,
-    },
-    y: {
-      value: 0,
-      min: -10,
-      max: 10,
-      step: 1,
-    },
-    z: {
-      value: 0,
-      min: -10,
-      max: 10,
-      step: 1,
-    },
-    tx: {
-      value: 0,
-      min: -10,
-      max: 10,
-      step: 1,
-    },
-    ty: {
-      value: 0,
-      min: -10,
-      max: 10,
-      step: 1,
-    },
-    tz: {
-      value: 0,
-      min: -10,
-      max: 10,
-      step: 1,
-    },
-  });
+  // const props = useControls("camera", {
+  //   x: {
+  //     value: 0,
+  //     min: -10,
+  //     max: 10,
+  //     step: 1,
+  //   },
+  //   y: {
+  //     value: 0,
+  //     min: -10,
+  //     max: 10,
+  //     step: 1,
+  //   },
+  //   z: {
+  //     value: 0,
+  //     min: -10,
+  //     max: 10,
+  //     step: 1,
+  //   },
+  //   tx: {
+  //     value: 0,
+  //     min: -10,
+  //     max: 10,
+  //     step: 1,
+  //   },
+  //   ty: {
+  //     value: 0,
+  //     min: -10,
+  //     max: 10,
+  //     step: 1,
+  //   },
+  //   tz: {
+  //     value: 0,
+  //     min: -10,
+  //     max: 10,
+  //     step: 1,
+  //   },
+  // });
   const JUMP_FORCE = 0.5;
   const MOVEMENT_SPEED = 4;
   const MAX_VEL = 3;
@@ -184,24 +184,24 @@ export function PlayerController2() {
     //   changeRotation = true;
     //   isOnFloor.current = false;
     // }
-    if (getKeys().forward && linVel.z > -MAX_VEL) {
-      impulse.z -= MOVEMENT_SPEED * delta * 10;
-      changeRotation = true;
-    }
-    if (getKeys().forward && getKeys().run && linVel.z > -MAX_VEL * 3) {
-      impulse.z -= MOVEMENT_SPEED * delta * 10;
-      changeRotation = true;
-    }
-    if (getKeys().back && linVel.z < MAX_VEL) {
+    if (getKeys().forward && linVel.z < MAX_VEL) {
       impulse.z += MOVEMENT_SPEED * delta * 10;
       changeRotation = true;
     }
-    if (getKeys().left && linVel.x > -MAX_VEL) {
-      impulse.x -= MOVEMENT_SPEED * delta * 10;
+    // if (getKeys().forward && getKeys().run && linVel.z < -MAX_VEL * 3) {
+    //   impulse.z -= MOVEMENT_SPEED * delta * 10;
+    //   changeRotation = true;
+    // }
+    if (getKeys().back && linVel.z > -MAX_VEL) {
+      impulse.z -= MOVEMENT_SPEED * delta * 10;
       changeRotation = true;
     }
-    if (getKeys().right && linVel.x < MAX_VEL) {
+    if (getKeys().left && linVel.x < MAX_VEL) {
       impulse.x += MOVEMENT_SPEED * delta * 10;
+      changeRotation = true;
+    }
+    if (getKeys().right && linVel.x > -MAX_VEL) {
+      impulse.x -= MOVEMENT_SPEED * delta * 10;
       changeRotation = true;
     }
 

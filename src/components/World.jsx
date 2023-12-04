@@ -56,7 +56,9 @@ export default function World() {
       <axesHelper args={[2]} />
       <color attach="background" args={["#ffffff"]} />
       <fog args={["#ffffff", 25, 50]} attach={"fog"} />
-      <Physics debug>
+      <Physics
+      // debug
+      >
         <Lights />
         <Plane />
         {/* <PlayerController /> */}
