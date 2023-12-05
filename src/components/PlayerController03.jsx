@@ -14,25 +14,25 @@ export function PlayerController03() {
   console.log("hi");
   const props = useControls("camera", {
     x: {
-      value: 0,
+      value: 1,
       min: -20,
       max: 20,
       step: 0.1,
     },
     y: {
-      value: 0,
+      value: 0.9,
       min: -20,
       max: 20,
       step: 0.1,
     },
     z: {
-      value: 0,
+      value: -8.1,
       min: -20,
       max: 20,
       step: 0.1,
     },
     tx: {
-      value: 0,
+      value: 3.3,
       min: -20,
       max: 20,
       step: 0.1,
@@ -44,7 +44,7 @@ export function PlayerController03() {
       step: 0.1,
     },
     tz: {
-      value: 0,
+      value: -2.0,
       min: -20,
       max: 20,
       step: 0.1,
@@ -176,36 +176,32 @@ export function PlayerController03() {
   const currentLookAt = new Vector3();
   let rotation = new Quaternion();
   useEffect(() => {
-    setTimeout(() => {
-      const calculateIdealOffset = (playerPosition) => {
-        const offset = new Vector3(props.x, props.y, props.z);
-        offset.applyQuaternion(rotation);
-        // console.log("2", playerPosition);
-        offset.add(playerPosition);
-        // console.log("3", offset);
-        return offset;
-      };
-      const calculateIdealLookAt = (playerPosition) => {
-        const offset = new Vector3(props.tx, props.ty, props.tz);
-        offset.add(playerPosition);
-        offset.applyQuaternion(rotation);
-        return offset;
-      };
-      const playerPosition = new Vector3().copy(
-        playerBody.current.translation(),
-      );
-      const idealOffset = calculateIdealOffset(playerPosition);
-      const idealLookAt = calculateIdealLookAt(playerPosition);
-
-      currentPosition.copy(idealOffset);
-      currentLookAt.copy(idealLookAt);
-      cameraRef.current.setLookAt(currentPosition, currentLookAt, true);
-    }, 5000);
+    setTimeout(() => {}, 5000);
   }, []);
 
+  const calculateIdealOffset = (playerPosition) => {
+    const offset = new Vector3(props.x, props.y, props.z);
+    offset.applyQuaternion(rotation);
+    // console.log("2", playerPosition);
+    offset.add(playerPosition);
+    // console.log("3", offset);
+    return offset;
+  };
+  const calculateIdealLookAt = (playerPosition) => {
+    const offset = new Vector3(props.tx, props.ty, props.tz);
+    offset.add(playerPosition);
+    offset.applyQuaternion(rotation);
+    return offset;
+  };
   useFrame((state, delta) => {
     const impulse = { x: 0, y: 0, z: 0 };
     const linVel = playerBody.current.linvel();
+    const playerPosition = new Vector3().copy(playerBody.current.translation());
+    const idealOffset = calculateIdealOffset(playerPosition);
+    const idealLookAt = calculateIdealLookAt(playerPosition);
+
+    currentPosition.copy(idealOffset);
+    currentLookAt.copy(idealLookAt);
 
     // console.log(playerPosition);
     let changeRotation = false;
@@ -255,6 +251,15 @@ export function PlayerController03() {
       // console.log(changeRotation);
       // const angle = Math.atan2(linVel.x, linVel.z);
       playerBody.current.setRotation(rotation);
+      cameraRef.current.setLookAt(
+        currentPosition.x,
+        currentPosition.y,
+        currentPosition.z,
+        currentLookAt.x,
+        currentLookAt.y,
+        currentLookAt.z,
+        true,
+      );
     }
   });
 
