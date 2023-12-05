@@ -11,6 +11,7 @@ import { useFrame } from "@react-three/fiber";
 import { PlayerController } from "./PlayerControl";
 import Plane from "./Plane";
 import { PlayerController2 } from "./PlayerController2";
+import { PlayerController03 } from "./PlayerController03";
 
 export default function World() {
   const playerRef = useRef();
@@ -53,16 +54,15 @@ export default function World() {
   return (
     <>
       <OrbitControls makeDefault />
-      <axesHelper args={[2]} />
-      <color attach="background" args={["#ffffff"]} />
-      <fog args={["#ffffff", 25, 50]} attach={"fog"} />
-      <Physics
-      // debug
-      >
+      <axesHelper args={[10]} />
+      <color attach="background" args={["#000000"]} />
+      {/* <fog args={["#ffffff", 25, 50]} attach={"fog"} /> */}
+      <Physics debug>
         <Lights />
         <Plane />
         {/* <PlayerController /> */}
-        <PlayerController2 />
+        {/* <PlayerController2 /> */}
+        <PlayerController03 />
 
         {/* <Box args={[2, 2, 2]} material-color="red" castShadow /> */}
       </Physics>
